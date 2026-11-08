@@ -2,6 +2,17 @@
 
 Docker-based local development services: **MySQL** and **PostgreSQL** databases, plus **Mailpit** for catching outgoing emails.
 
+## Why a dockerized database instead of an in-memory one (like H2)?
+
+- **The same database as in production:** same engine, same version, same SQL dialect. No query that works locally and breaks on deploy.
+- **The same migrations everywhere:** the exact Flyway scripts run in dev, in tests and in production, so a broken migration fails on your machine first.
+- **Bugs show up in dev, not in prod:** constraints, locking, transactions, error codes and engine-specific SQL behave exactly as they will in production.
+- **Realistic performance:** query plans, indexes and slow queries can be checked locally (`EXPLAIN`) on the real engine.
+- **Real tools:** inspect and debug the data with your usual database client. The data survives restarts.
+- **One setup for dev and tests:** the same image runs locally (Dev Services) and in integration tests (Testcontainers).
+
+> In-memory databases are fine for quick prototypes, or for tests that don't touch SQL. As soon as the code depends on real database behavior, use the real thing.
+
 ## Project structure
 
 | Path | Description |
